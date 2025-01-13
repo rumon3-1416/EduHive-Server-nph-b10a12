@@ -6,9 +6,9 @@ const { MongoClient, ServerApiVersion } = require('mongodb');
 // Token
 const { postJwtToken, clearJwtToken } = require('./controllers/jwtController');
 // Middlewares
-const { verifyToken } = require('./middlewares/verifyToken');
+
 // Controllers
-const { getUsers } = require('./controllers/getController');
+const { getSlides } = require('./controllers/getController');
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -43,7 +43,7 @@ let isConnected = false;
       (await client.connect(), (isConnected = true), console.log('Connected'));
     const database = client.db('a12DB');
     // Collections
-    const usersCollection = database.collection('users');
+    const slideCollection = database.collection('banner_slides');
 
     // Jwt Token
     app.post('/jwt', postJwtToken);
@@ -51,8 +51,8 @@ let isConnected = false;
 
     // Get
     app.get(
-      '/users',
-      async (req, res) => await getUsers(req, res, usersCollection)
+      '/slides',
+      async (req, res) => await getSlides(req, res, slideCollection)
     );
   } catch (error) {
     console.log(error.message);
