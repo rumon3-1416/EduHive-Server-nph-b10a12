@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongodb');
 const { tryCatch } = require('../utils/tryCatch');
 
 // Banner Slides
@@ -58,4 +59,21 @@ const getOverview = tryCatch(async (req, res, collections) => {
   });
 });
 
-module.exports = { getSlides, getClasses, getFeedBacks, getOverview };
+// Class Details
+const getClassDetails = tryCatch(async (req, res, collection) => {
+  const { id } = req.params;
+
+  const filter = { _id: new ObjectId(id) };
+
+  const result = await collection.findOne(filter);
+
+  res.send(result);
+});
+
+module.exports = {
+  getSlides,
+  getClasses,
+  getFeedBacks,
+  getOverview,
+  getClassDetails,
+};

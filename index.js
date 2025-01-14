@@ -14,7 +14,9 @@ const {
   getClasses,
   getFeedBacks,
   getOverview,
+  getClassDetails,
 } = require('./controllers/getController');
+const { verifyToken } = require('./middlewares/verifyToken');
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -60,7 +62,6 @@ let isConnected = false;
     app.post('/jwt', postJwtToken);
 
     // *** Get Starts ***
-
     // Banner Slides
     app.get(
       '/slides',
@@ -82,7 +83,9 @@ let isConnected = false;
       async (req, res) =>
         await getOverview(req, res, { classCollection, userCollection })
     );
-
+    app.get('/class_details/:id', verifyToken, async (req, res) =>
+      getClassDetails(req, res, classCollection)
+    );
     // *** Get Ends ***
   } catch (error) {
     console.log(error.message);
