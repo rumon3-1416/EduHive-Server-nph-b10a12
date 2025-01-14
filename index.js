@@ -13,6 +13,7 @@ const {
   getSlides,
   getClasses,
   getFeedBacks,
+  getOverview,
 } = require('./controllers/getController');
 
 const app = express();
@@ -53,6 +54,7 @@ let isConnected = false;
     const slideCollection = database.collection('banner_slides');
     const classCollection = database.collection('classes');
     const feedbackCollection = database.collection('feedbacks');
+    const userCollection = database.collection('users');
 
     // Jwt Token
     app.post('/jwt', postJwtToken);
@@ -74,6 +76,12 @@ let isConnected = false;
     app.get(
       '/feedbacks',
       async (req, res) => await getFeedBacks(req, res, feedbackCollection)
+    );
+    // Overview
+    app.get(
+      '/overview',
+      async (req, res) =>
+        await getOverview(req, res, { classCollection, userCollection })
     );
 
     // *** Get Ends ***

@@ -32,4 +32,28 @@ const getFeedBacks = tryCatch(async (req, res, collection) => {
   res.send(result);
 });
 
-module.exports = { getSlides, getClasses, getFeedBacks };
+// Overview
+const getOverview = tryCatch(async (req, res, collections) => {
+  const { classCollection, userCollection } = collections;
+
+  const aggregation = [
+    {
+      $group: {
+        _id: null,
+        totalEnrolment: { $sum: '$total_enrolment' },
+      },
+    },
+  ];
+
+  const totalClass = await classCollection.countDocuments();
+  const totalUsers = await userCollection.countDocuments();
+  const totalEnrolled = await classCollection.aggregate(aggregation).toArray();
+
+  res.send({
+    totalClass,
+    totalUsers,
+    totalEnrolled: totalEnrolled[0].totalEnrolment,
+  });
+});
+
+module.exports = { getSlides, getClasses, getFeedBacks, getOverview };
