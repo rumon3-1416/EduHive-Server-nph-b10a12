@@ -7,7 +7,7 @@ const getSlides = tryCatch(async (req, res, collection) => {
 });
 
 // Popular Classes
-const getClasses = async (req, res, collection) => {
+const getClasses = tryCatch(async (req, res, collection) => {
   const { popular, limit } = req.query;
 
   const filter = {
@@ -23,6 +23,6 @@ const getClasses = async (req, res, collection) => {
     .toArray();
 
   res.send(result);
-};
+});
 
 module.exports = { getSlides, getClasses };
