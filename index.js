@@ -5,7 +5,7 @@ const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 const { MongoClient, ServerApiVersion } = require('mongodb');
 // Token
-const { postJwtToken, clearJwtToken } = require('./controllers/jwtController');
+const { postJwtToken } = require('./controllers/jwtController');
 // Middlewares
 
 // Controllers
@@ -58,7 +58,6 @@ let isConnected = false;
 
     // Jwt Token
     app.post('/jwt', postJwtToken);
-    app.post('/logout', clearJwtToken);
 
     // *** Get Starts ***
 

@@ -45,7 +45,9 @@ const getOverview = tryCatch(async (req, res, collections) => {
     },
   ];
 
-  const totalClass = await classCollection.countDocuments();
+  const totalClass = await classCollection.countDocuments({
+    status: 'approved',
+  });
   const totalUsers = await userCollection.countDocuments();
   const totalEnrolled = await classCollection.aggregate(aggregation).toArray();
 
