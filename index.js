@@ -9,7 +9,11 @@ const { postJwtToken, clearJwtToken } = require('./controllers/jwtController');
 // Middlewares
 
 // Controllers
-const { getSlides, getClasses } = require('./controllers/getController');
+const {
+  getSlides,
+  getClasses,
+  getFeedBacks,
+} = require('./controllers/getController');
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -48,12 +52,14 @@ let isConnected = false;
     // Collections
     const slideCollection = database.collection('banner_slides');
     const classCollection = database.collection('classes');
+    const feedbackCollection = database.collection('feedbacks');
 
     // Jwt Token
     app.post('/jwt', postJwtToken);
     app.post('/logout', clearJwtToken);
 
-    // Get
+    // *** Get Starts ***
+
     // Banner Slides
     app.get(
       '/slides',
@@ -64,6 +70,13 @@ let isConnected = false;
       '/classes',
       async (req, res) => await getClasses(req, res, classCollection)
     );
+    // Feedbacks
+    app.get(
+      '/feedbacks',
+      async (req, res) => await getFeedBacks(req, res, feedbackCollection)
+    );
+
+    // *** Get Ends ***
   } catch (error) {
     console.log(error.message);
     process.exit(1);

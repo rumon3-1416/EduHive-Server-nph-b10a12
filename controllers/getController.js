@@ -25,4 +25,11 @@ const getClasses = tryCatch(async (req, res, collection) => {
   res.send(result);
 });
 
-module.exports = { getSlides, getClasses };
+// Feedbacks
+const getFeedBacks = tryCatch(async (req, res, collection) => {
+  const result = await collection.find().toArray();
+
+  res.send(result);
+});
+
+module.exports = { getSlides, getClasses, getFeedBacks };
