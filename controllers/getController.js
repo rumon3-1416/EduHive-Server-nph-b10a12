@@ -7,7 +7,7 @@ const getSlides = tryCatch(async (req, res, collection) => {
   res.send(result);
 });
 
-// Popular Classes
+// Classes
 const getClasses = tryCatch(async (req, res, collection) => {
   const { popular, limit } = req.query;
 

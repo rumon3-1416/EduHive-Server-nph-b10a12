@@ -17,13 +17,18 @@ const {
   getClassDetails,
 } = require('./controllers/getController');
 const { verifyToken } = require('./middlewares/verifyToken');
+const { createIntent } = require('./controllers/stripeController');
 
 const app = express();
 const port = process.env.PORT || 5000;
 const uri = process.env.MONGO_URI;
 
 const corsOption = {
-  origin: ['http://localhost:5173'],
+  origin: [
+    'http://localhost:5173',
+    'https://assignment-12-26ee0.web.app',
+    'https://assignment-12-26ee0.firebaseapp.com',
+  ],
   credentials: true,
 };
 // app use
@@ -87,6 +92,13 @@ let isConnected = false;
       getClassDetails(req, res, classCollection)
     );
     // *** Get Ends ***
+
+    // *** Post Starts ***
+    app.post(
+      '/create_payment_intent',
+      async (req, res) => await createIntent(req, res)
+    );
+    // *** Post Ends ***
   } catch (error) {
     console.log(error.message);
     process.exit(1);
