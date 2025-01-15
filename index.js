@@ -18,6 +18,7 @@ const {
 } = require('./controllers/getController');
 const { verifyToken } = require('./middlewares/verifyToken');
 const { createIntent } = require('./controllers/stripeController');
+const { postTransaction } = require('./controllers/postController');
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -62,6 +63,7 @@ let isConnected = false;
     const classCollection = database.collection('classes');
     const feedbackCollection = database.collection('feedbacks');
     const userCollection = database.collection('users');
+    const transactionCollection = database.collection('transactions');
 
     // Jwt Token
     app.post('/jwt', postJwtToken);
@@ -94,9 +96,15 @@ let isConnected = false;
     // *** Get Ends ***
 
     // *** Post Starts ***
+    // Create Payment Secret
     app.post(
       '/create_payment_intent',
+      verifyToken,
       async (req, res) => await createIntent(req, res)
+    );
+    // Save Transaction
+    app.post('/transactions', verifyToken, async (req, res) =>
+      postTransaction(req, res, transactionCollection)
     );
     // *** Post Ends ***
   } catch (error) {
