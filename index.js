@@ -18,7 +18,11 @@ const {
 } = require('./controllers/getController');
 const { verifyToken } = require('./middlewares/verifyToken');
 const { createIntent } = require('./controllers/stripeController');
-const { postTransaction, postUser } = require('./controllers/postController');
+const {
+  postTransaction,
+  postUser,
+  postTeacherReq,
+} = require('./controllers/postController');
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -64,6 +68,7 @@ let isConnected = false;
     const feedbackCollection = database.collection('feedbacks');
     const userCollection = database.collection('users');
     const transactionCollection = database.collection('transactions');
+    const teacherReqCollection = database.collection('teacher_requests');
 
     // Jwt Token
     app.post('/jwt', postJwtToken);
@@ -110,6 +115,10 @@ let isConnected = false;
     // Save Transaction
     app.post('/transactions', verifyToken, async (req, res) =>
       postTransaction(req, res, transactionCollection)
+    );
+    // add Teacher Request
+    app.post('/teacher_request', verifyToken, async (req, res) =>
+      postTeacherReq(req, res, teacherReqCollection)
     );
     // *** Post Ends ***
   } catch (error) {

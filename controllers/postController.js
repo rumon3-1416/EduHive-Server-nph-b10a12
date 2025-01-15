@@ -26,4 +26,18 @@ const postTransaction = tryCatch(async (req, res, collection) => {
   res.send(result);
 });
 
-module.exports = { postTransaction, postUser };
+// Save Teacher Request
+const postTeacherReq = tryCatch(async (req, res, collection) => {
+  const teacherDetails = req.body;
+
+  const teacherDoc = {
+    ...teacherDetails,
+    status: 'pending',
+  };
+
+  const result = await collection.insertOne(teacherDoc);
+
+  res.send(result);
+});
+
+module.exports = { postTransaction, postUser, postTeacherReq };
