@@ -18,7 +18,7 @@ const {
 } = require('./controllers/getController');
 const { verifyToken } = require('./middlewares/verifyToken');
 const { createIntent } = require('./controllers/stripeController');
-const { postTransaction } = require('./controllers/postController');
+const { postTransaction, postUser } = require('./controllers/postController');
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -96,11 +96,16 @@ let isConnected = false;
     // *** Get Ends ***
 
     // *** Post Starts ***
+    // Post User
+    app.post(
+      '/users',
+      async (req, res) => await postUser(req, res, userCollection)
+    );
     // Create Payment Secret
     app.post(
       '/create_payment_intent',
       verifyToken,
-      async (req, res) => await createIntent(req, res)
+      async (req, res) => await createIntent(req, res, classCollection)
     );
     // Save Transaction
     app.post('/transactions', verifyToken, async (req, res) =>

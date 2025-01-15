@@ -1,8 +1,12 @@
+const { ObjectId } = require('mongodb');
 const { tryCatch } = require('../utils/tryCatch');
 const stripe = require('stripe')(process.env.STRIPE_SK);
 
-const createIntent = tryCatch(async (req, res) => {
-  const price = 25;
+// Create Client Secret from Intent
+const createIntent = tryCatch(async (req, res, collection) => {
+  const { price } = await collection.findOne({
+    _id: new ObjectId(req.body.id),
+  });
 
   const paymentIntent = await stripe.paymentIntents.create({
     amount: price * 100,
