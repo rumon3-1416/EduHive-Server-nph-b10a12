@@ -11,6 +11,7 @@ const { createIntent } = require('./controllers/stripeController');
 // Middlewares
 const { verifyToken } = require('./middlewares/verifyToken');
 const { verifyAdmin } = require('./middlewares/verifyAdmin');
+const { verifyTeacher } = require('./middlewares/verifyTeacher');
 // Controllers
 const {
   getSlides,
@@ -26,7 +27,7 @@ const {
   postUser,
   postTeacherReq,
 } = require('./controllers/postController');
-const { verifyTeacher } = require('./middlewares/verifyTeacher');
+const { updateTechReq } = require('./controllers/putController');
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -60,13 +61,13 @@ app.get('/', (req, res) => {
     app.get('/feedbacks', getFeedBacks);
     app.get('/overview', getOverview);
     app.get('/class_details/:id', verifyToken, getClassDetails);
+    app.get('/teacher_requests', verifyToken, verifyAdmin, getTeacherRequests);
     app.get(
       '/teacher_requests_count',
       verifyToken,
       verifyAdmin,
       getTeachReqCount
     );
-    app.get('/teacher_requests', verifyToken, verifyAdmin, getTeacherRequests);
     // *** Get Ends ***
 
     // *** Post Starts ***
@@ -75,6 +76,10 @@ app.get('/', (req, res) => {
     app.post('/transactions', verifyToken, postTransaction);
     app.post('/teacher_request', verifyToken, postTeacherReq);
     // *** Post Ends ***
+
+    // *** Put Starts ***
+    app.put('/update_teach_req', verifyToken, verifyAdmin, updateTechReq);
+    // *** Put Ends ***
   } catch (error) {
     console.log(error.message);
     process.exit(1);
