@@ -21,6 +21,8 @@ const {
   getClassDetails,
   getTeacherRequests,
   getTeachReqCount,
+  getUsersCount,
+  getUsers,
 } = require('./controllers/getController');
 const {
   postTransaction,
@@ -61,6 +63,8 @@ app.get('/', (req, res) => {
     app.get('/feedbacks', getFeedBacks);
     app.get('/overview', getOverview);
     app.get('/class_details/:id', verifyToken, getClassDetails);
+    app.get('/users_count', verifyToken, verifyAdmin, getUsersCount);
+    app.get('/users', verifyToken, verifyAdmin, getUsers);
     app.get('/teacher_requests', verifyToken, verifyAdmin, getTeacherRequests);
     app.get(
       '/teacher_requests_count',

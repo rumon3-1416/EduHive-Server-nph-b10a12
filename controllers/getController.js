@@ -100,6 +100,25 @@ const getTeacherRequests = tryCatch(async (req, res) => {
   res.send(result);
 });
 
+// Total Users count
+const getUsersCount = tryCatch(async (req, res) => {
+  const usersCollection = await connectDB('users');
+  const count = await usersCollection.countDocuments();
+  res.send({ count });
+});
+
+// Get Users
+const getUsers = tryCatch(async (req, res) => {
+  const { page, data } = req.query;
+
+  const skip = page ? parseInt(page) - 1 : 0;
+  const limit = data ? parseInt(data) : 0;
+
+  const usersCollection = await connectDB('users');
+  const result = await usersCollection.find().skip(skip).limit(limit).toArray();
+  res.send(result);
+});
+
 module.exports = {
   getSlides,
   getClasses,
@@ -108,4 +127,6 @@ module.exports = {
   getClassDetails,
   getTeachReqCount,
   getTeacherRequests,
+  getUsersCount,
+  getUsers,
 };
