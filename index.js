@@ -26,6 +26,7 @@ const {
   postUser,
   postTeacherReq,
 } = require('./controllers/postController');
+const { verifyTeacher } = require('./middlewares/verifyTeacher');
 
 const app = express();
 const port = process.env.PORT || 5000;
