@@ -2,6 +2,7 @@ const { ObjectId } = require('mongodb');
 const { connectDB } = require('../config/database');
 const { tryCatch } = require('../utils/tryCatch');
 
+// Update Teacher Request
 const updateTechReq = tryCatch(async (req, res) => {
   const { updatedStatus, id, email } = req.body;
 
@@ -20,6 +21,7 @@ const updateTechReq = tryCatch(async (req, res) => {
   res.send({ success: true });
 });
 
+// Make user Admin
 const makeAdmin = tryCatch(async (req, res) => {
   const { email } = req.body;
 
@@ -32,4 +34,17 @@ const makeAdmin = tryCatch(async (req, res) => {
   res.send(result);
 });
 
-module.exports = { updateTechReq, makeAdmin };
+// Update Class Status
+const updateClass = tryCatch(async (req, res) => {
+  const { updatedStatus, id } = req.body;
+
+  const classCollection = await connectDB('classes');
+  const result = await classCollection.updateOne(
+    { _id: new ObjectId(id) },
+    { $set: { status: updatedStatus } }
+  );
+
+  res.send(result);
+});
+
+module.exports = { updateTechReq, makeAdmin, updateClass };

@@ -23,13 +23,19 @@ const {
   getTeachReqCount,
   getUsersCount,
   getUsers,
+  getAllClasses,
+  getClassesCount,
 } = require('./controllers/getController');
 const {
   postTransaction,
   postUser,
   postTeacherReq,
 } = require('./controllers/postController');
-const { updateTechReq, makeAdmin } = require('./controllers/putController');
+const {
+  updateTechReq,
+  makeAdmin,
+  updateClass,
+} = require('./controllers/putController');
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -63,6 +69,8 @@ app.get('/', (req, res) => {
     app.get('/feedbacks', getFeedBacks);
     app.get('/overview', getOverview);
     app.get('/class_details/:id', verifyToken, getClassDetails);
+    app.get('/classes_count', verifyToken, verifyAdmin, getClassesCount);
+    app.get('/all_classes', verifyToken, verifyAdmin, getAllClasses);
     app.get('/users_count', verifyToken, verifyAdmin, getUsersCount);
     app.get('/users', verifyToken, verifyAdmin, getUsers);
     app.get('/teacher_requests', verifyToken, verifyAdmin, getTeacherRequests);
@@ -84,6 +92,7 @@ app.get('/', (req, res) => {
     // *** Put Starts ***
     app.put('/users_admin', verifyToken, verifyAdmin, makeAdmin);
     app.put('/update_teach_req', verifyToken, verifyAdmin, updateTechReq);
+    app.put('/update_class', verifyToken, verifyAdmin, updateClass);
     // *** Put Ends ***
   } catch (error) {
     console.log(error.message);

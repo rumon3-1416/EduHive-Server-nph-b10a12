@@ -30,6 +30,25 @@ const getClasses = tryCatch(async (req, res) => {
   res.send(result);
 });
 
+// All Classes Count
+const getClassesCount = tryCatch(async (req, res) => {
+  const classCollection = await connectDB('classes');
+  const count = await classCollection.countDocuments();
+  res.send({ count });
+});
+
+// All Classes
+const getAllClasses = tryCatch(async (req, res) => {
+  const { page, data } = req.query;
+
+  const limit = data ? parseInt(data) : 0;
+  const skip = page && data ? (parseInt(page) - 1) * limit : 0;
+
+  const classCollection = await connectDB('classes');
+  const result = await classCollection.find().skip(skip).limit(limit).toArray();
+  res.send(result);
+});
+
 // Feedbacks
 const getFeedBacks = tryCatch(async (req, res) => {
   const feedbackCollection = await connectDB('feedbacks');
@@ -88,8 +107,8 @@ const getTeachReqCount = tryCatch(async (req, res) => {
 const getTeacherRequests = tryCatch(async (req, res) => {
   const { page, data } = req.query;
 
-  const skip = page ? parseInt(page) - 1 : 0;
   const limit = data ? parseInt(data) : 0;
+  const skip = page && data ? (parseInt(page) - 1) * limit : 0;
 
   const teacherReqCollection = await connectDB('teacher_requests');
   const result = await teacherReqCollection
@@ -111,8 +130,8 @@ const getUsersCount = tryCatch(async (req, res) => {
 const getUsers = tryCatch(async (req, res) => {
   const { page, data } = req.query;
 
-  const skip = page ? parseInt(page) - 1 : 0;
   const limit = data ? parseInt(data) : 0;
+  const skip = page && data ? (parseInt(page) - 1) * limit : 0;
 
   const usersCollection = await connectDB('users');
   const result = await usersCollection.find().skip(skip).limit(limit).toArray();
@@ -122,6 +141,8 @@ const getUsers = tryCatch(async (req, res) => {
 module.exports = {
   getSlides,
   getClasses,
+  getClassesCount,
+  getAllClasses,
   getFeedBacks,
   getOverview,
   getClassDetails,
