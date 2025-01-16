@@ -138,6 +138,16 @@ const getUsers = tryCatch(async (req, res) => {
   res.send(result);
 });
 
+// Get Profile Info
+const getProfileInfo = tryCatch(async (req, res) => {
+  const { user_email } = req.headers;
+
+  const usersCollection = await connectDB('users');
+  const result = await usersCollection.findOne({ email: user_email });
+
+  res.send(result);
+});
+
 module.exports = {
   getSlides,
   getClasses,
@@ -150,4 +160,5 @@ module.exports = {
   getTeacherRequests,
   getUsersCount,
   getUsers,
+  getProfileInfo,
 };
