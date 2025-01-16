@@ -1,7 +1,7 @@
 const tryCatch = fn => {
-  return async (req, res, collection) => {
+  return async (req, res) => {
     try {
-      await fn(req, res, collection);
+      await fn(req, res);
     } catch (error) {
       console.log('Error --> ', error.message);
 
