@@ -16,6 +16,7 @@ const {
   getOverview,
   getClassDetails,
   getTeacherRequests,
+  getTeachReqCount,
 } = require('./controllers/getController');
 const { verifyToken } = require('./middlewares/verifyToken');
 const { createIntent } = require('./controllers/stripeController');
@@ -100,6 +101,13 @@ let isConnected = false;
     // Class Details
     app.get('/class_details/:id', verifyToken, async (req, res) =>
       getClassDetails(req, res, classCollection)
+    );
+    // Teacher Requests Count
+    app.get(
+      '/teacher_requests_count',
+      verifyToken,
+      verifyAdmin,
+      async (req, res) => getTeachReqCount(req, res, teacherReqCollection)
     );
     // Teacher Requests
     app.get('/teacher_requests', verifyToken, verifyAdmin, async (req, res) =>

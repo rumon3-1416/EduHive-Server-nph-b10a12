@@ -71,8 +71,19 @@ const getClassDetails = tryCatch(async (req, res, collection) => {
 });
 
 // Teacher Requests
+const getTeachReqCount = tryCatch(async (req, res, collection) => {
+  const result = await collection.countDocuments();
+  res.send({ count: result });
+});
+
+// Teacher Requests
 const getTeacherRequests = tryCatch(async (req, res, collection) => {
-  const result = await collection.find().toArray();
+  const { page, data } = req.query;
+
+  const skip = page ? parseInt(page) - 1 : 0;
+  const limit = data ? parseInt(data) : 0;
+
+  const result = await collection.find().skip(skip).limit(limit).toArray();
   res.send(result);
 });
 
@@ -82,5 +93,6 @@ module.exports = {
   getFeedBacks,
   getOverview,
   getClassDetails,
+  getTeachReqCount,
   getTeacherRequests,
 };
