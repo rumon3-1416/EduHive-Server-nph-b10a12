@@ -29,7 +29,7 @@ const {
   postUser,
   postTeacherReq,
 } = require('./controllers/postController');
-const { updateTechReq } = require('./controllers/putController');
+const { updateTechReq, makeAdmin } = require('./controllers/putController');
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -82,6 +82,7 @@ app.get('/', (req, res) => {
     // *** Post Ends ***
 
     // *** Put Starts ***
+    app.put('/users_admin', verifyToken, verifyAdmin, makeAdmin);
     app.put('/update_teach_req', verifyToken, verifyAdmin, updateTechReq);
     // *** Put Ends ***
   } catch (error) {

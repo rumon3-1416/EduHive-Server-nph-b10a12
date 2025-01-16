@@ -20,4 +20,16 @@ const updateTechReq = tryCatch(async (req, res) => {
   res.send({ success: true });
 });
 
-module.exports = { updateTechReq };
+const makeAdmin = tryCatch(async (req, res) => {
+  const { email } = req.body;
+
+  const userCollection = await connectDB('users');
+  const result = await userCollection.updateOne(
+    { email },
+    { $set: { role: 'admin' } }
+  );
+
+  res.send(result);
+});
+
+module.exports = { updateTechReq, makeAdmin };

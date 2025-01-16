@@ -3,7 +3,7 @@ const { tryCatch } = require('../utils/tryCatch');
 
 // Add User
 const postUser = tryCatch(async (req, res) => {
-  const { email, displayName } = req.body;
+  const { email, displayName, photoURL } = req.body;
 
   const usersCollection = await connectDB('users');
   const result = await usersCollection.findOne({ email });
@@ -12,13 +12,20 @@ const postUser = tryCatch(async (req, res) => {
     await usersCollection.insertOne({
       email,
       displayName,
+      photoURL,
       role: 'student',
     });
 
-    return res.send({ role: 'student' });
-  }
+    res.send({ role: 'student' });
+  } else {
+    await usersCollection.updateOne(
+      { email },
+      { $set: { displayName, photoURL } },
+      { upsert: true }
+    );
 
-  res.send({ role: result.role });
+    res.send({ role: result.role });
+  }
 });
 
 // Save Transaction
