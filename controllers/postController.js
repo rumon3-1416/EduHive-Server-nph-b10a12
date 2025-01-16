@@ -11,9 +11,11 @@ const postUser = tryCatch(async (req, res, collection) => {
       displayName,
       role: 'student',
     });
+
+    return res.send({ role: 'student' });
   }
 
-  res.send({ success: true });
+  res.send({ role: result.role });
 });
 
 // Save Transaction

@@ -70,10 +70,17 @@ const getClassDetails = tryCatch(async (req, res, collection) => {
   res.send(result);
 });
 
+// Teacher Requests
+const getTeacherRequests = tryCatch(async (req, res, collection) => {
+  const result = await collection.find().toArray();
+  res.send(result);
+});
+
 module.exports = {
   getSlides,
   getClasses,
   getFeedBacks,
   getOverview,
   getClassDetails,
+  getTeacherRequests,
 };

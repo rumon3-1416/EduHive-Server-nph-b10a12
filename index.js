@@ -15,6 +15,7 @@ const {
   getFeedBacks,
   getOverview,
   getClassDetails,
+  getTeacherRequests,
 } = require('./controllers/getController');
 const { verifyToken } = require('./middlewares/verifyToken');
 const { createIntent } = require('./controllers/stripeController');
@@ -23,6 +24,7 @@ const {
   postUser,
   postTeacherReq,
 } = require('./controllers/postController');
+const { verifyAdmin } = require('./middlewares/verifyAdmin');
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -95,8 +97,13 @@ let isConnected = false;
       async (req, res) =>
         await getOverview(req, res, { classCollection, userCollection })
     );
+    // Class Details
     app.get('/class_details/:id', verifyToken, async (req, res) =>
       getClassDetails(req, res, classCollection)
+    );
+    // Teacher Requests
+    app.get('/teacher_requests', verifyToken, verifyAdmin, async (req, res) =>
+      getTeacherRequests(req, res, teacherReqCollection)
     );
     // *** Get Ends ***
 
