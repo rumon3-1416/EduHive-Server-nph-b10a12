@@ -12,6 +12,7 @@ const { createIntent } = require('./controllers/stripeController');
 const { verifyToken } = require('./middlewares/verifyToken');
 const { verifyAdmin } = require('./middlewares/verifyAdmin');
 const { verifyTeacher } = require('./middlewares/verifyTeacher');
+const { verifyAdmTeach } = require('./middlewares/verifyAdmTeach');
 // Controllers
 const {
   getSlides,
@@ -28,6 +29,7 @@ const {
   getProfileInfo,
   getTeacherClasses,
   getTeachClassCount,
+  getClassProgress,
 } = require('./controllers/getController');
 const {
   postTransaction,
@@ -81,6 +83,12 @@ app.get('/', (req, res) => {
     app.get('/classes_count', verifyToken, verifyAdmin, getClassesCount);
     app.get('/my_classes', verifyToken, verifyTeacher, getTeacherClasses);
     app.get('/my_class_count', verifyToken, verifyTeacher, getTeachClassCount);
+    app.get(
+      '/class_progress/:id',
+      verifyToken,
+      verifyAdmTeach,
+      getClassProgress
+    );
     // Users
     app.get('/user_profile', verifyToken, getProfileInfo);
     app.get('/users', verifyToken, verifyAdmin, getUsers);

@@ -61,6 +61,29 @@ const getClassDetails = tryCatch(async (req, res) => {
   res.send(result);
 });
 
+const getClassProgress = tryCatch(async (req, res) => {
+  const { id } = req.params;
+
+  const assignmentCollection = await connectDB('assignments');
+  const classCollection = await connectDB('classes');
+
+  const { total_enrolment, submitted } = await classCollection.findOne({
+    _id: new ObjectId(id),
+  });
+
+  const assignmentDetails = await assignmentCollection
+    .find({ classId: id })
+    .toArray();
+
+  const progress = {
+    total_enrolment,
+    total_assignment: assignmentDetails.length,
+    total_submission: submitted || 0,
+  };
+
+  res.send(progress);
+});
+
 // Teacher own Classes
 const getTeachClassCount = tryCatch(async (req, res) => {
   const { user_email } = req.headers;
@@ -184,6 +207,7 @@ module.exports = {
   getAllClasses,
   getClassDetails,
   getTeacherClasses,
+  getClassProgress,
   getFeedBacks,
   getOverview,
   getTeachReqCount,
