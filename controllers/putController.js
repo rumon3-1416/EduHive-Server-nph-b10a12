@@ -47,4 +47,17 @@ const updateClass = tryCatch(async (req, res) => {
   res.send(result);
 });
 
-module.exports = { updateTechReq, makeAdmin, updateClass };
+// Update Teacher Class
+const updateTeachClass = tryCatch(async (req, res) => {
+  const { _id, title, image, price, description } = req.body;
+
+  const classCollection = await connectDB('classes');
+  const result = await classCollection.updateOne(
+    { _id: new ObjectId(_id) },
+    { $set: { title, image, price, description } }
+  );
+
+  res.send(result);
+});
+
+module.exports = { updateTechReq, makeAdmin, updateClass, updateTeachClass };

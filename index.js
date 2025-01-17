@@ -39,6 +39,7 @@ const {
   updateTechReq,
   makeAdmin,
   updateClass,
+  updateTeachClass,
 } = require('./controllers/putController');
 
 const app = express();
@@ -101,6 +102,7 @@ app.get('/', (req, res) => {
     app.put('/users_admin', verifyToken, verifyAdmin, makeAdmin);
     app.put('/update_teach_req', verifyToken, verifyAdmin, updateTechReq);
     app.put('/update_class', verifyToken, verifyAdmin, updateClass);
+    app.patch('/update_my_class', verifyToken, verifyTeacher, updateTeachClass);
     // *** Put Ends ***
   } catch (error) {
     console.log(error.message);
