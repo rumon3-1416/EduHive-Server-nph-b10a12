@@ -49,6 +49,46 @@ const getAllClasses = tryCatch(async (req, res) => {
   res.send(result);
 });
 
+// Class Details
+const getClassDetails = tryCatch(async (req, res) => {
+  const { id } = req.params;
+
+  const filter = { _id: new ObjectId(id) };
+
+  const classCollection = await connectDB('classes');
+  const result = await classCollection.findOne(filter);
+
+  res.send(result);
+});
+
+// Teacher own Classes
+const getTeachClassCount = tryCatch(async (req, res) => {
+  const { user_email } = req.headers;
+
+  const classCollection = await connectDB('classes');
+  const count = await classCollection.countDocuments({ email: user_email });
+
+  res.send({ count });
+});
+
+// Teacher own Classes
+const getTeacherClasses = tryCatch(async (req, res) => {
+  const { user_email } = req.headers;
+  const { page, data } = req.query;
+
+  const limit = data ? parseInt(data) : 0;
+  const skip = page && data ? (parseInt(page) - 1) * limit : 0;
+
+  const classCollection = await connectDB('classes');
+  const result = await classCollection
+    .find({ email: user_email })
+    .skip(skip)
+    .limit(limit)
+    .toArray();
+
+  res.send(result);
+});
+
 // Feedbacks
 const getFeedBacks = tryCatch(async (req, res) => {
   const feedbackCollection = await connectDB('feedbacks');
@@ -82,18 +122,6 @@ const getOverview = tryCatch(async (req, res) => {
     totalUsers,
     totalEnrolled: totalEnrolled[0].totalEnrolment,
   });
-});
-
-// Class Details
-const getClassDetails = tryCatch(async (req, res) => {
-  const { id } = req.params;
-
-  const filter = { _id: new ObjectId(id) };
-
-  const classCollection = await connectDB('classes');
-  const result = await classCollection.findOne(filter);
-
-  res.send(result);
 });
 
 // Teacher Requests
@@ -152,10 +180,12 @@ module.exports = {
   getSlides,
   getClasses,
   getClassesCount,
+  getTeachClassCount,
   getAllClasses,
+  getClassDetails,
+  getTeacherClasses,
   getFeedBacks,
   getOverview,
-  getClassDetails,
   getTeachReqCount,
   getTeacherRequests,
   getUsersCount,

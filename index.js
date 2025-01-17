@@ -26,6 +26,8 @@ const {
   getAllClasses,
   getClassesCount,
   getProfileInfo,
+  getTeacherClasses,
+  getTeachClassCount,
 } = require('./controllers/getController');
 const {
   postTransaction,
@@ -67,13 +69,15 @@ app.get('/', (req, res) => {
 
     // *** Get Starts ***
     app.get('/slides', getSlides);
-    app.get('/classes', getClasses);
     app.get('/feedbacks', getFeedBacks);
     app.get('/overview', getOverview);
     app.get('/class_details/:id', verifyToken, getClassDetails);
     app.get('/user_profile', verifyToken, getProfileInfo);
+    app.get('/classes', getClasses);
     app.get('/classes_count', verifyToken, verifyAdmin, getClassesCount);
     app.get('/all_classes', verifyToken, verifyAdmin, getAllClasses);
+    app.get('/my_class_count', verifyToken, verifyTeacher, getTeachClassCount);
+    app.get('/my_classes', verifyToken, verifyTeacher, getTeacherClasses);
     app.get('/users_count', verifyToken, verifyAdmin, getUsersCount);
     app.get('/users', verifyToken, verifyAdmin, getUsers);
     app.get('/teacher_requests', verifyToken, verifyAdmin, getTeacherRequests);
