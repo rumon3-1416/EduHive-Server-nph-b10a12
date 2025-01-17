@@ -61,6 +61,45 @@ const getClassDetails = tryCatch(async (req, res) => {
   res.send(result);
 });
 
+// Student Classes
+const getStudentEnrolls = tryCatch(async (req, res) => {
+  const { user_email } = req.headers;
+
+  const transactionCollection = await connectDB('transactions');
+
+  const result = await transactionCollection
+    .aggregate([
+      {
+        $match: { email: user_email },
+      },
+      {
+        $addFields: {
+          classIdObj: { $toObjectId: '$classId' },
+        },
+      },
+      {
+        $lookup: {
+          from: 'classes',
+          localField: 'classIdObj',
+          foreignField: '_id',
+          as: 'enrolls',
+        },
+      },
+      {
+        $unwind: '$enrolls',
+      },
+      {
+        $replaceRoot: {
+          newRoot: '$enrolls',
+        },
+      },
+    ])
+    .toArray();
+
+  res.send(result);
+});
+
+// Class Progress
 const getClassProgress = tryCatch(async (req, res) => {
   const { id } = req.params;
 
@@ -200,19 +239,20 @@ const getProfileInfo = tryCatch(async (req, res) => {
 });
 
 module.exports = {
+  getUsers,
   getSlides,
   getClasses,
-  getClassesCount,
-  getTeachClassCount,
-  getAllClasses,
-  getClassDetails,
-  getTeacherClasses,
-  getClassProgress,
-  getFeedBacks,
   getOverview,
-  getTeachReqCount,
-  getTeacherRequests,
+  getFeedBacks,
   getUsersCount,
-  getUsers,
+  getAllClasses,
   getProfileInfo,
+  getClassDetails,
+  getClassesCount,
+  getClassProgress,
+  getTeachReqCount,
+  getStudentEnrolls,
+  getTeacherClasses,
+  getTeachClassCount,
+  getTeacherRequests,
 };
