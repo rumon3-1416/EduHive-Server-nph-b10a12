@@ -41,6 +41,7 @@ const {
   updateClass,
   updateTeachClass,
 } = require('./controllers/putController');
+const { delClass } = require('./controllers/delController');
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -69,18 +70,22 @@ app.get('/', (req, res) => {
     app.post('/jwt', postJwtToken);
 
     // *** Get Starts ***
+    // Home Page
     app.get('/slides', getSlides);
-    app.get('/feedbacks', getFeedBacks);
     app.get('/overview', getOverview);
-    app.get('/class_details/:id', verifyToken, getClassDetails);
-    app.get('/user_profile', verifyToken, getProfileInfo);
+    app.get('/feedbacks', getFeedBacks);
+    // Classes
     app.get('/classes', getClasses);
-    app.get('/classes_count', verifyToken, verifyAdmin, getClassesCount);
+    app.get('/class_details/:id', verifyToken, getClassDetails);
     app.get('/all_classes', verifyToken, verifyAdmin, getAllClasses);
-    app.get('/my_class_count', verifyToken, verifyTeacher, getTeachClassCount);
+    app.get('/classes_count', verifyToken, verifyAdmin, getClassesCount);
     app.get('/my_classes', verifyToken, verifyTeacher, getTeacherClasses);
-    app.get('/users_count', verifyToken, verifyAdmin, getUsersCount);
+    app.get('/my_class_count', verifyToken, verifyTeacher, getTeachClassCount);
+    // Users
+    app.get('/user_profile', verifyToken, getProfileInfo);
     app.get('/users', verifyToken, verifyAdmin, getUsers);
+    app.get('/users_count', verifyToken, verifyAdmin, getUsersCount);
+    // Teacher
     app.get('/teacher_requests', verifyToken, verifyAdmin, getTeacherRequests);
     app.get(
       '/teacher_requests_count',
@@ -92,18 +97,22 @@ app.get('/', (req, res) => {
 
     // *** Post Starts ***
     app.post('/users', postUser);
-    app.post('/create_payment_intent', verifyToken, createIntent);
     app.post('/transactions', verifyToken, postTransaction);
     app.post('/teacher_request', verifyToken, postTeacherReq);
+    app.post('/create_payment_intent', verifyToken, createIntent);
     app.post('/add_class', verifyToken, verifyTeacher, postClass);
     // *** Post Ends ***
 
     // *** Put Starts ***
     app.put('/users_admin', verifyToken, verifyAdmin, makeAdmin);
-    app.put('/update_teach_req', verifyToken, verifyAdmin, updateTechReq);
     app.put('/update_class', verifyToken, verifyAdmin, updateClass);
+    app.put('/update_teach_req', verifyToken, verifyAdmin, updateTechReq);
     app.patch('/update_my_class', verifyToken, verifyTeacher, updateTeachClass);
     // *** Put Ends ***
+
+    // *** Delete Starts ***
+    app.delete('/delete_class/:id', verifyToken, verifyTeacher, delClass);
+    // *** Delete Ends ***
   } catch (error) {
     console.log(error.message);
     process.exit(1);
