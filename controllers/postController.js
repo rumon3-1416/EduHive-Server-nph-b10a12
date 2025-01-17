@@ -54,4 +54,20 @@ const postTeacherReq = tryCatch(async (req, res) => {
   res.send(result);
 });
 
-module.exports = { postTransaction, postUser, postTeacherReq };
+// Add Class
+const postClass = tryCatch(async (req, res) => {
+  const classDetails = req.body;
+  const classDoc = {
+    ...classDetails,
+    price: parseInt(classDetails.price),
+    status: 'pending',
+    total_enrolment: 0,
+  };
+
+  const classCollection = await connectDB('classes');
+  const result = await classCollection.insertOne(classDoc);
+
+  res.send(result);
+});
+
+module.exports = { postTransaction, postUser, postTeacherReq, postClass };
