@@ -70,4 +70,20 @@ const postClass = tryCatch(async (req, res) => {
   res.send(result);
 });
 
-module.exports = { postTransaction, postUser, postTeacherReq, postClass };
+// Add Assignment
+const postAssignment = tryCatch(async (req, res) => {
+  const assignment = req.body;
+
+  const assignmentCollection = await connectDB('assignments');
+  const result = await assignmentCollection.insertOne(assignment);
+
+  res.send(result);
+});
+
+module.exports = {
+  postTransaction,
+  postUser,
+  postTeacherReq,
+  postClass,
+  postAssignment,
+};

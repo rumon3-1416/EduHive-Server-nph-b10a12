@@ -36,6 +36,7 @@ const {
   postUser,
   postTeacherReq,
   postClass,
+  postAssignment,
 } = require('./controllers/postController');
 const {
   updateTechReq,
@@ -109,6 +110,7 @@ app.get('/', (req, res) => {
     app.post('/teacher_request', verifyToken, postTeacherReq);
     app.post('/create_payment_intent', verifyToken, createIntent);
     app.post('/add_class', verifyToken, verifyTeacher, postClass);
+    app.post('/add_assignment', verifyToken, verifyTeacher, postAssignment);
     // *** Post Ends ***
 
     // *** Put Starts ***
