@@ -30,13 +30,6 @@ const getClasses = tryCatch(async (req, res) => {
   res.send(result);
 });
 
-// All Classes Count
-const getClassesCount = tryCatch(async (req, res) => {
-  const classCollection = await connectDB('classes');
-  const count = await classCollection.countDocuments();
-  res.send({ count });
-});
-
 // All Classes
 const getAllClasses = tryCatch(async (req, res) => {
   const { page, data } = req.query;
@@ -45,8 +38,13 @@ const getAllClasses = tryCatch(async (req, res) => {
   const skip = page && data ? (parseInt(page) - 1) * limit : 0;
 
   const classCollection = await connectDB('classes');
-  const result = await classCollection.find().skip(skip).limit(limit).toArray();
-  res.send(result);
+  const count = await classCollection.countDocuments();
+  const classes = await classCollection
+    .find()
+    .skip(skip)
+    .limit(limit)
+    .toArray();
+  res.send({ classes, count });
 });
 
 // Class Details
@@ -123,14 +121,23 @@ const getClassProgress = tryCatch(async (req, res) => {
   res.send(progress);
 });
 
-// Teacher own Classes
-const getTeachClassCount = tryCatch(async (req, res) => {
-  const { user_email } = req.headers;
+// Class Assignment
+const getClassAssignments = tryCatch(async (req, res) => {
+  const { id } = req.params;
+  const { page, data } = req.query;
 
-  const classCollection = await connectDB('classes');
-  const count = await classCollection.countDocuments({ email: user_email });
+  const limit = data ? parseInt(data) : 0;
+  const skip = page && data ? (parseInt(page) - 1) * limit : 0;
 
-  res.send({ count });
+  const assignmentCollection = await connectDB('assignments');
+  const count = await assignmentCollection.countDocuments({ classId: id });
+  const assignments = await assignmentCollection
+    .find({ classId: id })
+    .skip(skip)
+    .limit(limit)
+    .toArray();
+
+  res.send({ assignments, count });
 });
 
 // Teacher own Classes
@@ -142,13 +149,14 @@ const getTeacherClasses = tryCatch(async (req, res) => {
   const skip = page && data ? (parseInt(page) - 1) * limit : 0;
 
   const classCollection = await connectDB('classes');
-  const result = await classCollection
+  const count = await classCollection.countDocuments({ email: user_email });
+  const teacherClasses = await classCollection
     .find({ email: user_email })
     .skip(skip)
     .limit(limit)
     .toArray();
 
-  res.send(result);
+  res.send({ teacherClasses, count });
 });
 
 // Feedbacks
@@ -187,13 +195,6 @@ const getOverview = tryCatch(async (req, res) => {
 });
 
 // Teacher Requests
-const getTeachReqCount = tryCatch(async (req, res) => {
-  const teacherReqCollection = await connectDB('teacher_requests');
-  const result = await teacherReqCollection.countDocuments();
-  res.send({ count: result });
-});
-
-// Teacher Requests
 const getTeacherRequests = tryCatch(async (req, res) => {
   const { page, data } = req.query;
 
@@ -201,19 +202,13 @@ const getTeacherRequests = tryCatch(async (req, res) => {
   const skip = page && data ? (parseInt(page) - 1) * limit : 0;
 
   const teacherReqCollection = await connectDB('teacher_requests');
-  const result = await teacherReqCollection
+  const count = await teacherReqCollection.countDocuments();
+  const requests = await teacherReqCollection
     .find()
     .skip(skip)
     .limit(limit)
     .toArray();
-  res.send(result);
-});
-
-// Total Users count
-const getUsersCount = tryCatch(async (req, res) => {
-  const usersCollection = await connectDB('users');
-  const count = await usersCollection.countDocuments();
-  res.send({ count });
+  res.send({ requests, count });
 });
 
 // Get Users
@@ -224,8 +219,9 @@ const getUsers = tryCatch(async (req, res) => {
   const skip = page && data ? (parseInt(page) - 1) * limit : 0;
 
   const usersCollection = await connectDB('users');
-  const result = await usersCollection.find().skip(skip).limit(limit).toArray();
-  res.send(result);
+  const count = await usersCollection.countDocuments();
+  const users = await usersCollection.find().skip(skip).limit(limit).toArray();
+  res.send({ users, count });
 });
 
 // Get Profile Info
@@ -244,15 +240,12 @@ module.exports = {
   getClasses,
   getOverview,
   getFeedBacks,
-  getUsersCount,
   getAllClasses,
   getProfileInfo,
   getClassDetails,
-  getClassesCount,
   getClassProgress,
-  getTeachReqCount,
   getStudentEnrolls,
   getTeacherClasses,
-  getTeachClassCount,
   getTeacherRequests,
+  getClassAssignments,
 };

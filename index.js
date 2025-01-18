@@ -21,16 +21,13 @@ const {
   getOverview,
   getClassDetails,
   getTeacherRequests,
-  getTeachReqCount,
-  getUsersCount,
   getUsers,
   getAllClasses,
-  getClassesCount,
   getProfileInfo,
   getTeacherClasses,
-  getTeachClassCount,
   getClassProgress,
   getStudentEnrolls,
+  getClassAssignments,
 } = require('./controllers/getController');
 const {
   postTransaction,
@@ -80,12 +77,11 @@ app.get('/', (req, res) => {
     app.get('/feedbacks', getFeedBacks);
     // Classes
     app.get('/classes', getClasses);
-    app.get('/student_classes', verifyToken, getStudentEnrolls);
     app.get('/class_details/:id', verifyToken, getClassDetails);
+    app.get('/student_classes', verifyToken, getStudentEnrolls);
     app.get('/all_classes', verifyToken, verifyAdmin, getAllClasses);
-    app.get('/classes_count', verifyToken, verifyAdmin, getClassesCount);
+    app.get('/class_assignments/:id', verifyToken, getClassAssignments);
     app.get('/my_classes', verifyToken, verifyTeacher, getTeacherClasses);
-    app.get('/my_class_count', verifyToken, verifyTeacher, getTeachClassCount);
     app.get(
       '/class_progress/:id',
       verifyToken,
@@ -95,15 +91,8 @@ app.get('/', (req, res) => {
     // Users
     app.get('/user_profile', verifyToken, getProfileInfo);
     app.get('/users', verifyToken, verifyAdmin, getUsers);
-    app.get('/users_count', verifyToken, verifyAdmin, getUsersCount);
     // Teacher
     app.get('/teacher_requests', verifyToken, verifyAdmin, getTeacherRequests);
-    app.get(
-      '/teacher_requests_count',
-      verifyToken,
-      verifyAdmin,
-      getTeachReqCount
-    );
     // *** Get Ends ***
 
     // *** Post Starts ***
