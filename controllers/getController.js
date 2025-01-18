@@ -234,6 +234,18 @@ const getProfileInfo = tryCatch(async (req, res) => {
   res.send(result);
 });
 
+// Check Request Status?
+const checkRequestedStatus = tryCatch(async (req, res) => {
+  const { user_email } = req.headers;
+
+  const teacherReqCollection = await connectDB('teacher_requests');
+  const result = await teacherReqCollection.findOne({
+    email: user_email,
+  });
+
+  res.send({ status: result?.status || 'Not Requested' });
+});
+
 module.exports = {
   getUsers,
   getSlides,
@@ -248,4 +260,5 @@ module.exports = {
   getTeacherClasses,
   getTeacherRequests,
   getClassAssignments,
+  checkRequestedStatus,
 };

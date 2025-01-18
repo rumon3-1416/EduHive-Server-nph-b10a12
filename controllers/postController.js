@@ -50,7 +50,19 @@ const postTeacherReq = tryCatch(async (req, res) => {
   };
 
   const teacherReqCollection = await connectDB('teacher_requests');
-  const result = await teacherReqCollection.insertOne(teacherDoc);
+  const isExists = await teacherReqCollection.findOne({
+    email: teacherDetails.email,
+  });
+
+  let result;
+  if (isExists) {
+    result = await teacherReqCollection.updateOne(
+      { email: teacherDetails.email },
+      { $set: teacherDoc }
+    );
+  } else {
+    result = await teacherReqCollection.insertOne(teacherDoc);
+  }
 
   res.send(result);
 });

@@ -15,32 +15,33 @@ const { verifyTeacher } = require('./middlewares/verifyTeacher');
 const { verifyAdmTeach } = require('./middlewares/verifyAdmTeach');
 // Controllers
 const {
+  getUsers,
   getSlides,
   getClasses,
-  getFeedBacks,
   getOverview,
-  getClassDetails,
-  getTeacherRequests,
-  getUsers,
+  getFeedBacks,
   getAllClasses,
   getProfileInfo,
-  getTeacherClasses,
+  getClassDetails,
   getClassProgress,
+  getTeacherClasses,
   getStudentEnrolls,
+  getTeacherRequests,
   getClassAssignments,
+  checkRequestedStatus,
 } = require('./controllers/getController');
 const {
-  postTransaction,
   postUser,
-  postTeacherReq,
   postClass,
-  postAssignment,
   postFeedback,
+  postTeacherReq,
+  postAssignment,
+  postTransaction,
 } = require('./controllers/postController');
 const {
-  updateTechReq,
   makeAdmin,
   updateClass,
+  updateTechReq,
   updateTeachClass,
   updateAssignSubmission,
 } = require('./controllers/putController');
@@ -94,6 +95,7 @@ app.get('/', (req, res) => {
     app.get('/user_profile', verifyToken, getProfileInfo);
     app.get('/users', verifyToken, verifyAdmin, getUsers);
     // Teacher
+    app.get('/check_request', verifyToken, checkRequestedStatus);
     app.get('/teacher_requests', verifyToken, verifyAdmin, getTeacherRequests);
     // *** Get Ends ***
 

@@ -9,7 +9,7 @@ const updateTechReq = tryCatch(async (req, res) => {
   const teacherReqCollection = await connectDB('teacher_requests');
   const usersCollection = await connectDB('users');
 
-  await teacherReqCollection.updateOne(
+  const result = await teacherReqCollection.updateOne(
     { _id: new ObjectId(id) },
     { $set: { status: updatedStatus } }
   );
@@ -18,7 +18,7 @@ const updateTechReq = tryCatch(async (req, res) => {
     await usersCollection.updateOne({ email }, { $set: { role: 'teacher' } });
   }
 
-  res.send({ success: true });
+  res.send(result);
 });
 
 // Make user Admin
