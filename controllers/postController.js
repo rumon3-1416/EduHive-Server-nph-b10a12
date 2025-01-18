@@ -81,9 +81,25 @@ const postAssignment = tryCatch(async (req, res) => {
   res.send(result);
 });
 
+// Post Feedback
+const postFeedback = tryCatch(async (req, res) => {
+  const feedback = req.body;
+
+  const feedbackCollection = await connectDB('feedbacks');
+  const classCollection = await connectDB('classes');
+
+  const { title } = await classCollection.findOne({
+    _id: new ObjectId(feedback.id),
+  });
+  const result = await feedbackCollection.insertOne({ ...feedback, title });
+
+  res.send(result);
+});
+
 module.exports = {
   postUser,
   postClass,
+  postFeedback,
   postTeacherReq,
   postAssignment,
   postTransaction,

@@ -35,6 +35,7 @@ const {
   postTeacherReq,
   postClass,
   postAssignment,
+  postFeedback,
 } = require('./controllers/postController');
 const {
   updateTechReq,
@@ -98,6 +99,7 @@ app.get('/', (req, res) => {
 
     // *** Post Starts ***
     app.post('/users', postUser);
+    app.post('/post_feedback', verifyToken, postFeedback);
     app.post('/transactions', verifyToken, postTransaction);
     app.post('/teacher_request', verifyToken, postTeacherReq);
     app.post('/create_payment_intent', verifyToken, createIntent);
