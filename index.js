@@ -41,6 +41,7 @@ const {
   makeAdmin,
   updateClass,
   updateTeachClass,
+  updateAssignSubmission,
 } = require('./controllers/putController');
 const { delClass } = require('./controllers/delController');
 
@@ -108,6 +109,7 @@ app.get('/', (req, res) => {
     app.put('/users_admin', verifyToken, verifyAdmin, makeAdmin);
     app.put('/update_class', verifyToken, verifyAdmin, updateClass);
     app.put('/update_teach_req', verifyToken, verifyAdmin, updateTechReq);
+    app.put('/submit_assignment', verifyToken, updateAssignSubmission);
     app.patch('/update_my_class', verifyToken, verifyTeacher, updateTeachClass);
     // *** Put Ends ***
 
