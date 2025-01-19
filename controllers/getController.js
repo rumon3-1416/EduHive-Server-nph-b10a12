@@ -12,22 +12,25 @@ const getSlides = tryCatch(async (req, res) => {
 
 // Classes
 const getClasses = tryCatch(async (req, res) => {
-  const { popular, limit } = req.query;
+  const { popular, limit, page } = req.query;
 
   const filter = {
     status: 'approved',
   };
-  const sortQuery = popular ? { total_enrolment: -1 } : {};
   const limitQuery = limit ? parseInt(limit) : 0;
+  const sortQuery = popular ? { total_enrolment: -1 } : {};
+  const skip = page ? (parseInt(page) - 1) * limit : 0;
 
   const classCollection = await connectDB('classes');
+  const count = await classCollection.countDocuments(filter);
   const result = await classCollection
     .find(filter)
     .sort(sortQuery)
+    .skip(skip)
     .limit(limitQuery)
     .toArray();
 
-  res.send(result);
+  res.send({ classes: result, count });
 });
 
 // All Classes
@@ -213,14 +216,19 @@ const getTeacherRequests = tryCatch(async (req, res) => {
 
 // Get Users
 const getUsers = tryCatch(async (req, res) => {
-  const { page, data } = req.query;
+  const { page, data, search } = req.query;
 
+  const filter = { email: { $regex: search, $options: 'i' } };
   const limit = data ? parseInt(data) : 0;
   const skip = page && data ? (parseInt(page) - 1) * limit : 0;
 
   const usersCollection = await connectDB('users');
   const count = await usersCollection.countDocuments();
-  const users = await usersCollection.find().skip(skip).limit(limit).toArray();
+  const users = await usersCollection
+    .find(filter)
+    .skip(skip)
+    .limit(limit)
+    .toArray();
   res.send({ users, count });
 });
 
@@ -243,7 +251,7 @@ const checkRequestedStatus = tryCatch(async (req, res) => {
     email: user_email,
   });
 
-  res.send({ status: result?.status || 'Not Requested' });
+  res.send(result);
 });
 
 module.exports = {
