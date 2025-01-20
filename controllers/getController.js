@@ -10,6 +10,21 @@ const getSlides = tryCatch(async (req, res) => {
   res.send(result);
 });
 
+// Partners
+const getPartners = tryCatch(async (req, res) => {
+  const partnerCollection = await connectDB('partners');
+  const result = await partnerCollection.find().toArray();
+
+  res.send(result);
+});
+
+// Categories
+const getCategories = tryCatch(async (req, res) => {
+  const categoriesCollection = await connectDB('categories');
+  const result = await categoriesCollection.find().toArray();
+  res.send(result);
+});
+
 // Classes
 const getClasses = tryCatch(async (req, res) => {
   const { popular, limit, page } = req.query;
@@ -258,9 +273,11 @@ module.exports = {
   getUsers,
   getSlides,
   getClasses,
+  getPartners,
   getOverview,
   getFeedBacks,
   getAllClasses,
+  getCategories,
   getProfileInfo,
   getClassDetails,
   getClassProgress,

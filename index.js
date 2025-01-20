@@ -29,6 +29,8 @@ const {
   getTeacherRequests,
   getClassAssignments,
   checkRequestedStatus,
+  getPartners,
+  getCategories,
 } = require('./controllers/getController');
 const {
   postUser,
@@ -76,8 +78,10 @@ app.get('/', (req, res) => {
     // *** Get Starts ***
     // Home Page
     app.get('/slides', getSlides);
+    app.get('/partners', getPartners);
     app.get('/overview', getOverview);
     app.get('/feedbacks', getFeedBacks);
+    app.get('/categories', getCategories);
     // Classes
     app.get('/classes', getClasses);
     app.get('/class_details/:id', verifyToken, getClassDetails);
