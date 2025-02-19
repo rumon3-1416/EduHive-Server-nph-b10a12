@@ -84,7 +84,7 @@ app.get('/', (req, res) => {
     app.get('/categories', getCategories);
     // Classes
     app.get('/classes', getClasses);
-    app.get('/class_details/:id', verifyToken, getClassDetails);
+    app.get('/class_details/:id', getClassDetails);
     app.get('/student_classes', verifyToken, getStudentEnrolls);
     app.get('/all_classes', verifyToken, verifyAdmin, getAllClasses);
     app.get('/class_assignments/:id', verifyToken, getClassAssignments);
