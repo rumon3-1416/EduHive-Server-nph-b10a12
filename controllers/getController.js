@@ -27,13 +27,19 @@ const getCategories = tryCatch(async (req, res) => {
 
 // Classes
 const getClasses = tryCatch(async (req, res) => {
-  const { popular, limit, page } = req.query;
+  const { popular, sort, limit, page } = req.query;
 
   const filter = {
     status: 'approved',
   };
   const limitQuery = limit ? parseInt(limit) : 0;
-  const sortQuery = popular ? { total_enrolment: -1 } : {};
+  const sortQuery = popular
+    ? { total_enrolment: -1 }
+    : sort === 'low-high'
+    ? { price: 1 }
+    : sort === 'high-low'
+    ? { price: -1 }
+    : {};
   const skip = page ? (parseInt(page) - 1) * limit : 0;
 
   const classCollection = await connectDB('classes');
